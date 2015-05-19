@@ -1,0 +1,15 @@
+# ignore composer libraries
+vendor/
+
+# ignore npm modules
+node_modules/
+
+# ignore config file
+config.php
+
+# ignore dist folder (build it yourself!)
+/dist/
+
+# ignore project images
+/src/include/img/list/
+/src/include/img/item/
