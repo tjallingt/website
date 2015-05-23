@@ -61,18 +61,28 @@ $.ajax({
 });
 
 // click navigate home
-$( ".pagenav:not('#content .pagenav')" ).on( "click", navPushState );
+var pageNavList = document.querySelectorAll( ".pagenav" );
+for(var i = 0; i < pageNavList.length; i++) {
+	pageNavList[i].addEventListener( "click", navPushState );
+}
 
-// click item navigate item (dynamic selector)
-$( "#content" ).on( "click", ".pagenav", navPushState );
+// click item navigate item (dynamic items)
+document.querySelector( "#content" ).addEventListener( "click", function( event ) {
+	if( event.target && event.target.classList.contains( "pagenav" ) ) {
+		navPushState( event );
+	}
+});
 
 // internal navigation
-function navPushState( e ) {
-	if (history.pushState) {
-		e.preventDefault();
+function navPushState( event ) {
+	if( history.pushState ) {
+		event.preventDefault();
 		
-		document.querySelector( ".logo" ).classList.add( "spin" );
-		
+		var logoList = document.querySelectorAll( ".logo" );
+		for(var i = 0; i < logoList.length; i++) {
+			logoList[i].classList.add( "spin" );
+		}
+
 		loading = true;
 		var url = this.href.replace( location.origin, "" );
 		
@@ -91,17 +101,20 @@ function navPushState( e ) {
 }
 
 // restore window after popstate
-$( window ).on( "popstate", function( e ){
-	renderPage( e.originalEvent.state );
+window.onpopstate = function( event ) {
+	renderPage( event.state );
 	ga('send', 'pageview', location.pathname);
-});
+};
 
 // render the page from the json data
 function renderPage( json ) {
 	$( "#content" ).fadeOut( 500, function() {
 		$( this ).html( json.data ).fadeIn( 500 );
 		if( hasMouse ) {
-			document.querySelector( ".title" ).classList.add( "no-touch" );
+			var titleList = document.querySelectorAll( ".title" );
+			for(var i = 0; i < titleList.length; i++) {
+				titleList[i].classList.add( "no-touch" );
+			}
 		}
 	});
 }
@@ -112,10 +125,12 @@ function renderPage( json ) {
 */
 /*
 $( "#content" ).addClass( "fade" ).one( "transitionend", function() {
-	var content = Mustache.render( templates[json.type], json.data );
-	$( this ).html( content ).removeClass( "fade" );
+	$( this ).html( json.data ).removeClass( "fade" );
 	if(hasMouse) {
-		$( ".title" ).addClass( "no-touch" );
+		var titleList = document.querySelectorAll( ".title" );
+		for(var i = 0; i < titleList.length; i++) {
+			titleList[i].classList.add( "no-touch" );
+		}
 	}
 });
 */
