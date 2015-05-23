@@ -1,22 +1,27 @@
 /* GLOBAL VARIABLES */
 var loading = false;
 var hasMouse = false;
-var fab = $( "#fab" );
+var fab = document.querySelector( "#fab" );
 
 /* HTML AND CSS CHANGES */
 // calculate age
 var dob = new Date( "1994-5-18" );
 var today = new Date();
 var age = Math.floor( ( today - dob ) / ( 365.25 * 24 * 60 * 60 * 1000 ) ); // days * hours * minutes * seconds * milliseconds
-$( "#age" ).html( age + " years old" );
+document.querySelector( "#age" ).innerHTML = age + " years old";
 
 // add contact info
-$( "#about" ).append( "<p>Contact: <a href='/maillink' target='_blank'>e-mail</a>, <a href='https://keybase.io/tjallingt' target='_blank'>keybase</a>.</p>" );
+var about = document.createElement("p");
+about.innerHTML = "Contact: <a href='/maillink' target='_blank'>e-mail</a>, <a href='https://keybase.io/tjallingt' target='_blank'>keybase</a>.";
+document.querySelector( "#about" ).appendChild( about );
 
 // if a user uses mouse show labels on hover
 $( document ).one( "mousemove", function() {
 	hasMouse = true;
-	$( ".title" ).addClass( "no-touch" );
+	var titleList = document.querySelectorAll( ".title" );
+	for(var i = 0; i < titleList.length; i++) {
+		titleList[i].classList.add( "no-touch" );
+	}
 });
 
 // if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
@@ -28,16 +33,19 @@ $( document ).one( "touchstart", function() {
 /* FLOATING ACTION BUTTON */
 // move button off screen
 if( $( window ).scrollTop() < 50 ) {
-	fab.addClass( "fab-hidden" ).css( "bottom", "-"+fab.css( "height" ) );
+	fab.classList.add( "fab-hidden" );
+	fab.style.bottom = "-" + getComputedStyle( fab ).height;
 }
 
 // show/hide button when scrolling
 $( window ).on( 'scroll', function() {
 	if( $( this ).scrollTop() > 50 ) {
-		fab.removeClass( "fab-hidden" ).css( "bottom", "" );
+		fab.classList.remove( "fab-hidden" );
+		fab.style.bottom =  "";
 	}
-	else if( !fab.hasClass( "fab-hidden" )) {
-		fab.addClass( "fab-hidden" ).css( "bottom", "-"+fab.css( "height" ) );
+	else if( !fab.classList.contains( "fab-hidden" ) ) {
+		fab.classList.add( "fab-hidden" );
+		fab.style.bottom = "-" + getComputedStyle( fab ).height;
 	}
 });
 
@@ -63,7 +71,7 @@ function navPushState( e ) {
 	if (history.pushState) {
 		e.preventDefault();
 		
-		$( ".logo" ).addClass( "spin" );
+		document.querySelector( ".logo" ).classList.add( "spin" );
 		
 		loading = true;
 		var url = this.href.replace( location.origin, "" );
@@ -93,7 +101,7 @@ function renderPage( json ) {
 	$( "#content" ).fadeOut( 500, function() {
 		$( this ).html( json.data ).fadeIn( 500 );
 		if( hasMouse ) {
-			$( ".title" ).addClass( "no-touch" );
+			document.querySelector( ".title" ).classList.add( "no-touch" );
 		}
 	});
 }
