@@ -24,7 +24,7 @@ gulp.task('minify-js', function() {
 
 // lint certain javascript files (non-libraries)
 gulp.task('lint-js', function() {
-	gulp.src(['src/include/js/main.js'])
+	gulp.src(['src/include/js/*.js'])
 		.pipe(jshint({curly: true, jquery: true}))
 		.pipe(jshint.reporter('default'));
 });

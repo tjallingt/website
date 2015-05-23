@@ -12,7 +12,7 @@ The frameworks/libraries that this project uses with can be downloaded with:
 
 This project is build with:
 * Slimframework (php)
-* Mustache (php/js)
+* Mustache (php)
 * jQuery (js)
 * Sass (css)
 
@@ -51,16 +51,16 @@ The website will be built to the ```dist/``` folder, you can upload the contents
 ## ToDo
 
 Work is still needed on:
-* removing mustache.js in favour of rendering the templates server side.
-	* mustache templates to the ```templates/``` folder.
-	* ajax response will be html.
-* removing jQuery in favour of pure javascript.
+[x] removing mustache.js in favour of rendering the templates server side.~~
+	* ~~mustache templates to the ```templates/``` folder.~~
+	* ~~ajax response will be html.~~
+[ ] removing jQuery in favour of pure javascript.
 	* use es6 with babel.js.
-* using flexbox for formatting.
+[ ] using flexbox for formatting.
 	* instead of current margin: auto; method.
 	* browser compatibility might be a problem (for now).
-* adding pagination to the homepage.
-* ...
+[ ] adding pagination to the homepage.
+[ ] ...
 
 ## License
 

@@ -91,8 +91,7 @@ $( window ).on( "popstate", function( e ){
 // render the page from the json data
 function renderPage( json ) {
 	$( "#content" ).fadeOut( 500, function() {
-		var content = Mustache.render( templates[json.type], json.data );
-		$( this ).html( content ).fadeIn( 500 );
+		$( this ).html( json.data ).fadeIn( 500 );
 		if( hasMouse ) {
 			$( ".title" ).addClass( "no-touch" );
 		}

@@ -1,12 +1,3 @@
-<? 
-$mustache = new Mustache_Engine;
-
-// templates for the list and item pages
-$templates = array(
-	"list" => "{{#list}}<div class='list'><a href='/project/{{url}}' class='link pagenav'><img src='/include/img/list/{{img}}' class='img' alt='{{title}}'><h4 class='title'>{{title}}</h4></a></div>{{/list}}",
-	"item" => "<div class='item'><h2 class='title italic'>{{title}}</h2><div>{{{content}}}</div></div>"
-);
-?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -48,6 +39,7 @@ $templates = array(
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
 			ga('create', 'UA-33276157-2', 'auto', {'allowLinker': true});
 			ga('require', 'linker');
 			ga('linker:autoLink', ['tjallingt.nl', 'tjallingt.com']);
@@ -72,7 +64,7 @@ $templates = array(
 		<hr class="row">
 		
 		<article id="content" class="vertical-padding row center 100vh">
-			<?= $mustache->render($templates[$type], $data); ?>
+			<?= $data ?>
 		</article>
 		
 		<hr class="row">
@@ -90,10 +82,6 @@ $templates = array(
 		
 		<!-- JAVASCRIPT/JQUERY -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="/include/js/mustache.js"></script>
-		<script type="text/javascript">
-			var templates = <?= json_encode( $templates ) ?>;
-		</script>
 		<script type="text/javascript" src="/include/js/main.js"></script>
 	</body>
 </html>
