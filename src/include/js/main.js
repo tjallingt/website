@@ -10,11 +10,6 @@ var today = new Date();
 var age = Math.floor( ( today - dob ) / ( 365.25 * 24 * 60 * 60 * 1000 ) ); // days * hours * minutes * seconds * milliseconds
 document.querySelector( "#age" ).innerHTML = age + " years old";
 
-// add contact info
-var about = document.createElement("p");
-about.innerHTML = "Contact: <a href='/maillink' target='_blank'>e-mail</a>, <a href='https://keybase.io/tjallingt' target='_blank'>keybase</a>.";
-document.querySelector( "#about" ).appendChild( about );
-
 // if a user uses mouse show labels on hover
 $( document ).one( "mousemove", function() {
 	hasMouse = true;
