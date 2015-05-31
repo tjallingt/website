@@ -2,6 +2,12 @@
 var loading = false;
 var hasMouse = false;
 var fab = document.querySelector( "#fab" );
+// function for looping over querySelectorAll stuff
+var forEach = function( array, callback, scope ) {
+	for ( var i = 0; i < array.length; i++ ) {
+		callback.call( scope, array[i] );
+	}
+};
 
 /* HTML AND CSS CHANGES */
 // calculate age
@@ -10,31 +16,32 @@ var today = new Date();
 var age = Math.floor( ( today - dob ) / ( 365.25 * 24 * 60 * 60 * 1000 ) ); // days * hours * minutes * seconds * milliseconds
 document.querySelector( "#age" ).innerHTML = age + " years old";
 
-// if a user uses mouse show labels on hover
-$( document ).one( "mousemove", function() {
+// if a user uses mouse hide titles and show on hover
+function noTouch( event ) {
 	hasMouse = true;
-	var titleList = document.querySelectorAll( ".title" );
-	for(var i = 0; i < titleList.length; i++) {
-		titleList[i].classList.add( "no-touch" );
-	}
-});
+	forEach( document.querySelectorAll( ".title" ), function( element ) {
+		element.classList.add( "no-touch" );
+	});
+	document.removeEventListener( "mousemove", noTouch );
+}
 
 // if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
 // (only works if the touchstart is triggered before mousemove which seems to be the case)
-$( document ).one( "touchstart", function() {
-	$( this ).off( "mousemove" );
+document.addEventListener( "mousemove", noTouch );
+document.addEventListener( "touchstart", function( event ) {
+	document.removeEventListener( "mousemove", noTouch );
 });
 
 /* FLOATING ACTION BUTTON */
 // move button off screen
-if( $( window ).scrollTop() < 50 ) {
+if( window.scrollY < 50 ) {
 	fab.classList.add( "fab-hidden" );
 	fab.style.bottom = "-" + getComputedStyle( fab ).height;
 }
 
 // show/hide button when scrolling
-$( window ).on( 'scroll', function() {
-	if( $( this ).scrollTop() > 50 ) {
+window.addEventListener( "scroll", function( event ) {
+	if( window.scrollY > 50 ) {
 		fab.classList.remove( "fab-hidden" );
 		fab.style.bottom =  "";
 	}
@@ -56,17 +63,18 @@ $.ajax({
 });
 
 // click navigate home
-$( ".pagenav:not('#content .pagenav')" ).on( "click", navPushState );
-
-// click item navigate item (dynamic selector)
-$( "#content" ).on( "click", ".pagenav", navPushState );
+forEach( document.querySelectorAll( ".pagenav" ), function( element ) {
+	element.addEventListener( "click", navPushState );
+});
 
 // internal navigation
-function navPushState( e ) {
+function navPushState( event ) {
 	if (history.pushState) {
-		e.preventDefault();
+		event.preventDefault();
 		
-		document.querySelector( ".logo" ).classList.add( "spin" );
+		forEach( document.querySelectorAll( ".logo" ), function( element ) {
+			element.classList.add( "spin" );
+		});
 		
 		loading = true;
 		var url = this.href.replace( location.origin, "" );
@@ -79,22 +87,26 @@ function navPushState( e ) {
 				history.pushState( json, "", url );
 				renderPage( json );
 				loading = false;
-				ga('send', 'pageview', url);
+				ga( "send", "pageview", url );
 			}
 		});
 	}
 }
 
 // restore window after popstate
-$( window ).on( "popstate", function( e ){
-	renderPage( e.originalEvent.state );
-	ga('send', 'pageview', location.pathname);
+window.addEventListener( "popstate", function( event ){
+	renderPage( event.state );
+	ga( "send", "pageview", location.pathname );
 });
 
 // render the page from the json data
 function renderPage( json ) {
 	$( "#content" ).fadeOut( 500, function() {
 		$( this ).html( json.data ).fadeIn( 500 );
+		
+		forEach( document.querySelector( "#content" ).querySelectorAll( ".pagenav" ), function( element ) {
+			element.addEventListener( "click", navPushState );
+		});
 		if( hasMouse ) {
 			document.querySelector( ".title" ).classList.add( "no-touch" );
 		}
