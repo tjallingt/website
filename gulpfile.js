@@ -31,7 +31,8 @@ gulp.task('minify-js', ['lint-js'], function() {
 gulp.task('lint-js', function() {
 	return gulp.src(['src/include/js/*.js'])
 		.pipe(jshint({curly: true, jquery: true}))
-		.pipe(jshint.reporter('default'));
+		.pipe(jshint.reporter('default'))
+		.pipe(jshint.reporter('fail'));
 });
 
 // minify css files
