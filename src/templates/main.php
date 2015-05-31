@@ -56,8 +56,9 @@
 				<h1>
 					<a href="/" class="pagenav no-decoration">Tjalling Tolle</a>
 				</h1>
-				<p><span id="age">Born May 18th, 1994</span>. <a href="http://www.utwente.nl/onderwijs/bachelor/opleidingen/creative-technology/" target="_blank">Creative Technologist</a>, designer and developer.</p>
+				<p><span id="age">Born May 18th, 1994</span>. <a href="http://www.utwente.nl/onderwijs/bachelor/opleidingen/creative-technology/" target="_blank">Creative Technologist</a>, designer and <a href='https://github.com/tjallingt' target='_blank'>developer</a>.</p>
 				<p>Enschede, the Netherlands.</p>
+				<p>Contact: <a href='/maillink' target='_blank'>e-mail</a>, <a href='https://keybase.io/tjallingt' target='_blank'>Keybase</a>.</p>
 			</div>
 		</header>
 		
