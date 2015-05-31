@@ -1,4 +1,6 @@
 var gulp = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
+var babel = require("gulp-babel");
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var jshint = require('gulp-jshint');
@@ -18,7 +20,10 @@ gulp.task('copy-all', function() {
 // minify javascript files
 gulp.task('minify-js', ['lint-js'], function() {
 	return gulp.src(['src/include/js/*.js'], {base: 'src'})
-		.pipe(uglify())
+		.pipe(sourcemaps.init())
+			.pipe(babel())
+			.pipe(uglify())
+		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('dist'));
 });
 
