@@ -18,10 +18,12 @@ This project is build with:
 
 Building this project is done using:
 * Gulp
+	* Gulp-sourcemaps
+	* Gulp-babel
 	* Gulp-jshint
 	* Gulp-uglify
 	* Gulp-sass
-* Del
+* Del (just for clearing out the ```dist/``` directory when needed)
 
 ## Building
 
@@ -56,9 +58,9 @@ Work is still needed on:
 	- [x] ajax response will be html.
 - [ ] removing jQuery in favour of pure javascript.
 	- [ ] use es6 with babel.js.
-- [ ] using flexbox for formatting.
-	- [ ] instead of current margin: auto; method.
-	- [ ] browser compatibility might be a problem (for now).
+- [ ] using css flexbox.
+	- [ ] remove margin: auto; method.
+	- [ ] browser compatibility?
 - [ ] adding pagination to the homepage.
 - [ ] ...
 
