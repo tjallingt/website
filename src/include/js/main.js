@@ -7,31 +7,18 @@ class Website {
 		// insert calculated age
 		document.querySelector( "#age" ).innerHTML = `${this.calculateAge( "1994-5-18" )} years old`;
 
+		// bound event to a function to be able to call `this` inside the event and but also call removeEventListener
+		this.boundNoTouch = ( event ) =>  this.noTouch( event );
+		document.addEventListener( "mousemove", this.boundNoTouch );
 		// if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
 		// (only works if the touchstart is triggered before mousemove which seems to be the case)
-		document.addEventListener( "mousemove", ( event ) => this.noTouch( event ) );
 		document.addEventListener( "touchstart", ( event ) => {
-			document.removeEventListener( "mousemove",  ( event ) => this.noTouch( event ) );
+			document.removeEventListener( "mousemove",  this.boundNoTouch );
 		});
-
-		/* FLOATING ACTION BUTTON */
-		// move button off screen
-		if( window.scrollY < 50 ) {
-			fab.classList.add( "fab-hidden" );
-			fab.style.bottom = "-" + getComputedStyle( fab ).height;
-		}
 
 		// show/hide button when scrolling
-		window.addEventListener( "scroll", ( event ) => {
-			if( window.scrollY > 50 ) {
-				fab.classList.remove( "fab-hidden" );
-				fab.style.bottom =  "";
-			}
-			else if( !fab.classList.contains( "fab-hidden" ) ) {
-				fab.classList.add( "fab-hidden" );
-				fab.style.bottom = "-" + getComputedStyle( fab ).height;
-			}
-		});
+		this.toggleFAB();
+		window.addEventListener( "scroll", this.toggleFAB );
 
 		if (history.pushState) {
 
@@ -70,6 +57,18 @@ class Website {
 		let age = new Date( today - dob ).getFullYear() - 1970; // 1970 is the beginning of unix time
 	}
 
+	// move the fab button
+	toggleFAB() {
+		if( window.scrollY > 50 ) {
+			fab.classList.remove( "fab-hidden" );
+			fab.style.bottom =  "";
+		}
+		else if( !fab.classList.contains( "fab-hidden" ) ) {
+			fab.classList.add( "fab-hidden" );
+			fab.style.bottom = "-" + getComputedStyle( fab ).height;
+		}
+	}
+
 
 	// if a user uses mouse hide titles and show on hover
 	noTouch( event ) {
@@ -77,7 +76,7 @@ class Website {
 		this.forEach( document.querySelectorAll( ".title" ), ( element ) => {
 			element.classList.add( "no-touch" );
 		});
-		document.removeEventListener( "mousemove", this.noTouch );
+		document.removeEventListener( "mousemove", this.boundNoTouch );
 	}
 
 	// internal navigation
