@@ -30,7 +30,7 @@ gulp.task('minify-js', ['lint-js'], function() {
 // lint certain javascript files (non-libraries)
 gulp.task('lint-js', function() {
 	return gulp.src(['src/include/js/*.js'])
-		.pipe(jshint({curly: true, jquery: true}))
+		.pipe(jshint({curly: true, esnext: true, jquery: true}))
 		.pipe(jshint.reporter('default'))
 		.pipe(jshint.reporter('fail'));
 });

@@ -3,3 +3,6 @@ node_modules/
 
 # ignore dist folder (build it yourself!)
 /dist/
+
+# sublime text cache file
+.sublime-gulp.cache
