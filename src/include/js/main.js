@@ -7,25 +7,24 @@ class Website {
 		// insert calculated age
 		document.querySelector( "#age" ).innerHTML = `${this.calculateAge( "1994-5-18" )} years old`;
 
-		// bound event to a function to be able to call `this` inside the event and but also call removeEventListener
+		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
+
+		// on mousemove add no-touch class that hides the titles until hover
 		document.addEventListener( "mousemove", this.boundNoTouch );
+
 		// if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
 		// (only works if the touchstart is triggered before mousemove which seems to be the case)
-		document.addEventListener( "touchstart", ( event ) => {
-			document.removeEventListener( "mousemove",  this.boundNoTouch );
-		});
+		document.addEventListener( "touchstart", ( event ) => document.removeEventListener( "mousemove",  this.boundNoTouch ) );
 
-		// show/hide button when scrolling
-		this.toggleFAB();
+		// show/hide floating action button when scrolling
 		window.addEventListener( "scroll", this.toggleFAB );
 
+		// check if pushstate is available
 		if (history.pushState) {
 
 			// create initial state for history api
-			this.getJson( location.href, ( json ) => {
-				history.replaceState( json, "", location.href );
-			});
+			this.getRequest( location.href, ( data ) => history.replaceState( data, "", location.href ) );
 
 			// add eventlisteners for the history api functions
 			this.forEach( document.querySelectorAll( ".pagenav" ), ( element ) => {
@@ -33,10 +32,7 @@ class Website {
 			});
 
 			// restore window after popstate
-			window.addEventListener( "popstate", ( event ) => {
-				this.renderPage( event.state );
-				ga( "send", "pageview", location.pathname );
-			});
+			window.addEventListener( "popstate", ( event ) => this.renderPage( event.state ) );
 
 			// stop the logo from spinning when in the correct orientation
 			this.forEach( document.querySelectorAll( ".logo" ), ( element ) => {
@@ -50,22 +46,26 @@ class Website {
 		}
 	}
 
-	// function to calculate the age for a given date of birth
+	// function to the number of years since a given date
 	calculateAge( dateOfBirth ) {
 		let dob = new Date( dateOfBirth );
 		let today = new Date();
-		let age = new Date( today - dob ).getFullYear() - 1970; // 1970 is the beginning of unix time
+		// calculates the amount of milliseconds between the two dates
+		// 1970 is the beginning of unix time, subtract that to get the amount of time between the two dates
+		let age = new Date( today - dob ).getFullYear() - 1970;
 	}
 
-	// move the fab button
+	// toggle the floating action button
 	toggleFAB() {
+		let fab = document.querySelector( "#fab" );
 		if( window.scrollY > 50 ) {
 			fab.classList.remove( "fab-hidden" );
 			fab.style.bottom =  "";
 		}
 		else if( !fab.classList.contains( "fab-hidden" ) ) {
 			fab.classList.add( "fab-hidden" );
-			fab.style.bottom = "-" + getComputedStyle( fab ).height;
+			let height = getComputedStyle( fab ).height;
+			fab.style.bottom = `-${height}`;
 		}
 	}
 
@@ -73,45 +73,47 @@ class Website {
 	// if a user uses mouse hide titles and show on hover
 	noTouch( event ) {
 		this.hasMouse = true;
-		this.forEach( document.querySelectorAll( ".title" ), ( element ) => {
-			element.classList.add( "no-touch" );
-		});
+		this.forEach( document.querySelectorAll( ".title" ), ( element ) => element.classList.add( "no-touch" ) );
 		document.removeEventListener( "mousemove", this.boundNoTouch );
 	}
 
-	// internal navigation
+	// function for pushstate navigation
 	navPushState( event ) {
 		event.preventDefault();
 		
-		this.forEach( document.querySelectorAll( ".logo" ), ( element ) => {
-			element.classList.add( "spin" );
-		});
+		this.forEach( document.querySelectorAll( ".logo" ), ( element ) => element.classList.add( "spin" ) );
 		
 		this.loading = true;
 
 		let url = event.currentTarget.href.replace( location.origin, "" );
 		
-		this.getJson( url, ( json ) => {
-			history.pushState( json, "", url );
-			this.renderPage( json );
+		this.getRequest( url, ( data ) => {
+			history.pushState( data, "", url );
+			this.renderPage( data );
 			this.loading = false;
-			ga( "send", "pageview", url );
 		});
 	}
 
-	// render the page from the json data
+	// put html on page
 	// move fade in/out to css (toggle a class in js)
-	renderPage( json ) {
+	// remove jquery fade out/in dependency
+	renderPage( html ) {
 		$( "#content" ).fadeOut( 500, () => {
-			$( "#content" ).html( json.data ).fadeIn( 500 );
+			// insert html and fade in
+			$( "#content" ).html( html ).fadeIn( 500 );
 			
+			// reaply all the pushstate events
 			this.forEach( document.querySelector( "#content" ).querySelectorAll( ".pagenav" ), ( element ) => {
 				element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
 			});
 
+			// if has mouse reaply title no-touch style
 			if( this.hasMouse ) {
-				document.querySelector( ".title" ).classList.add( "no-touch" );
+				this.forEach( document.querySelectorAll( ".title" ), ( element ) => element.classList.add( "no-touch" ) );
 			}
+
+			// update google analytics stats
+			ga( "send", "pageview", location.pathname );
 		});
 	}
 
@@ -124,9 +126,8 @@ class Website {
 
 	// shorthand for the jQuery ajax function
 	// replace with own get request
-	getJson( url, callback ) {
+	getRequest( url, callback ) {
 		$.ajax({
-			dataType: "json",
 			url: url,
 			cache: false,
 			success: callback
