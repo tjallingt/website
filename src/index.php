@@ -18,14 +18,14 @@ $app->get( '/', function() use( $app ) {
 	// put it in an array so mustache is able to render it
 	$db = array( 'list' => $app->db->getList() );
 	if( empty( $db['list'] ) ) $app->error();
+	
 	$html = $app->m->render( 'list', $db );
-	$data = array( 'data' => $html );
 		
 	if( $app->request->isAjax() ) {
-		$app->response->write( json_encode( $data, JSON_HEX_QUOT | JSON_HEX_TAG ) );
+		$app->response->write( $html );
 	}
 	else {
-		$app->render( 'main.php', $data );
+		$app->render( 'main.php', array( 'html' => $html ) );
 	}
 
 });
@@ -35,14 +35,14 @@ $app->get( '/project/:project(/)', function( $project ) use( $app ) {
 	
 	$db = $app->db->getItem( $project );
 	if( empty( $db ) ) $app->notFound();
+	
 	$html = $app->m->render( 'item', $db );
-	$data = array( 'data' => $html );
 	
 	if( $app->request->isAjax() ) {
-		$app->response->write( json_encode( $data, JSON_HEX_QUOT | JSON_HEX_TAG ) );
+		$app->response->write( $html );
 	}
 	else {
-		$app->render( 'main.php', $data );
+		$app->render( 'main.php', array( 'html' => $html ) );
 	}
 
 });
