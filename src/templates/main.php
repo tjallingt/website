@@ -64,7 +64,7 @@
 		
 		<hr class="row">
 		
-		<article id="content" class="vertical-padding row center 100vh">
+		<article id="content" class="transition-opacity vertical-padding row center 100vh">
 			<?= $html ?>
 		</article>
 		

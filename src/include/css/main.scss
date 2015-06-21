@@ -79,10 +79,10 @@ hr {
 
 /*------ANIMATION------*/
 .spin {
-	-webkit-animation: rotate 1s ease-in-out 0s infinite reverse;
-	animation: rotate 1s ease-in-out 0s infinite reverse;
+	-webkit-animation: rotate 1s linear 0s infinite reverse;
+	animation: rotate 1s linear 0s infinite reverse;
 }
-.fade {
+.transparent {
 	opacity: 0;
 }
 
@@ -96,6 +96,8 @@ hr {
 		max-height: 100vh;
 	}
 }
+
+/*-------HELPERS------*/
 .center {
 	text-align: center;
 }
@@ -113,6 +115,9 @@ hr {
 }
 .100vh {
 	min-height: 100vh;
+}
+.transition-opacity {
+	transition: opacity 500ms ease;
 }
 
 /*------LIST------*/

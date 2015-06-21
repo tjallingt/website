@@ -105,9 +105,11 @@ class Website {
 	// move fade in/out to css (toggle a class in js)
 	// remove jquery fade out/in dependency
 	renderPage( html ) {
-		$( "#content" ).fadeOut( 500, () => {
-			// insert html and fade in
-			$( "#content" ).html( html ).fadeIn( 500 );
+		document.getElementById("content").classList.add("transparent");
+		// wait 500ms for transition to end
+		setTimeout( () => {
+			// set new content
+			document.getElementById("content").innerHTML = html;
 			
 			// reaply all the pushstate events
 			this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
@@ -119,9 +121,11 @@ class Website {
 				this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
 			}
 
-			// update google analytics stats
-			ga( "send", "pageview", location.pathname );
-		});
+			document.getElementById("content").classList.remove("transparent");
+		}, 500 );
+
+		// update google analytics stats
+		ga( "send", "pageview", location.pathname );
 	}
 
 	// helper function for looping over nodeLists
