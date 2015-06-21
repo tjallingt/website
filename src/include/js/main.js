@@ -4,8 +4,8 @@ class Website {
 		this.loading = false;
 		this.hasMouse = false;
 
-		// insert calculated age
-		document.querySelector( "#age" ).innerHTML = `${this.calculateAge( "1994-5-18" )} years old`;
+		// insert age into intro
+		document.querySelector( "#age" ).innerHTML = `${this.yearsSince( "1994-5-18" )} years old`;
 
 		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
@@ -14,8 +14,13 @@ class Website {
 		document.addEventListener( "mousemove", this.boundNoTouch );
 
 		// if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
-		// (only works if the touchstart is triggered before mousemove which seems to be the case)
-		document.addEventListener( "touchstart", ( event ) => document.removeEventListener( "mousemove",  this.boundNoTouch ) );
+		// (works because touchstart is triggered before mousemove)
+		let removeNoTouch = ( event ) => {
+			document.removeEventListener( "mousemove",  this.boundNoTouch );
+			// remove self; arguments.callee would be nice (wouldn't need to create a bound function) but doesnt work in es5 strict mode
+			document.removeEventListener( "touchstart", this.removeNoTouch );
+		};
+		document.addEventListener( "touchstart", removeNoTouch );
 
 		// show/hide floating action button when scrolling
 		window.addEventListener( "scroll", this.toggleFAB );
@@ -47,12 +52,13 @@ class Website {
 	}
 
 	// function to the number of years since a given date
-	calculateAge( dateOfBirth ) {
-		let dob = new Date( dateOfBirth );
+	yearsSince( date ) {
+		let then = new Date( date );
 		let today = new Date();
 		// calculates the amount of milliseconds between the two dates
+		let msSince = new Date( today - then );
 		// 1970 is the beginning of unix time, subtract that to get the amount of time between the two dates
-		let age = new Date( today - dob ).getFullYear() - 1970;
+		return msSince.getFullYear() - 1970;
 	}
 
 	// toggle the floating action button
