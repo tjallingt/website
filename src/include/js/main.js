@@ -5,7 +5,7 @@ class Website {
 		this.hasMouse = false;
 
 		// insert age into intro
-		document.querySelector( "#age" ).innerHTML = `${this.yearsSince( "1994-5-18" )} years old`;
+		document.getElementById( "age" ).innerHTML = `${this.yearsSince( "1994-5-18" )} years old`;
 
 		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
@@ -32,7 +32,7 @@ class Website {
 			this.getRequest( location.href, ( data ) => history.replaceState( data, "", location.href ) );
 
 			// add eventlisteners for the history api functions
-			this.forEach( document.querySelectorAll( ".pagenav" ), ( element ) => {
+			this.forEach( document.getElementsByClassName( "pagenav" ), ( element ) => {
 				element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
 			});
 
@@ -40,7 +40,7 @@ class Website {
 			window.addEventListener( "popstate", ( event ) => this.renderPage( event.state ) );
 
 			// stop the logo from spinning when in the correct orientation
-			this.forEach( document.querySelectorAll( ".logo" ), ( element ) => {
+			this.forEach( document.getElementsByClassName( "logo" ), ( element ) => {
 				element.addEventListener( "animationiteration", ( event ) => {
 					if( !this.loading ) {
 						event.currentTarget.classList.remove( "spin" );
@@ -55,23 +55,24 @@ class Website {
 	yearsSince( date ) {
 		let then = new Date( date );
 		let today = new Date();
-		// calculates the amount of milliseconds between the two dates
+		// subtracting two dates gives the amount of milliseconds between them
 		let msSince = new Date( today - then );
-		// 1970 is the beginning of unix time, subtract that to get the amount of time between the two dates
+		// 1970 is the beginning of unix time, subtract that to get the amount of years since the given date
 		return msSince.getFullYear() - 1970;
 	}
 
 	// toggle the floating action button
 	toggleFAB() {
-		let fab = document.querySelector( "#fab" );
+		let fab = document.getElementById( "fab" );
+		
 		if( window.scrollY > 50 ) {
 			fab.classList.remove( "fab-hidden" );
 			fab.style.bottom =  "";
 		}
 		else if( !fab.classList.contains( "fab-hidden" ) ) {
 			fab.classList.add( "fab-hidden" );
-			let height = getComputedStyle( fab ).height;
-			fab.style.bottom = `-${height}`;
+			let height = getComputedStyle( fab ).height; // string (in px)!
+			fab.style.bottom = `-${height}`; // make negative
 		}
 	}
 
@@ -79,7 +80,7 @@ class Website {
 	// if a user uses mouse hide titles and show on hover
 	noTouch( event ) {
 		this.hasMouse = true;
-		this.forEach( document.querySelectorAll( ".title" ), ( element ) => element.classList.add( "no-touch" ) );
+		this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
 		document.removeEventListener( "mousemove", this.boundNoTouch );
 	}
 
@@ -87,7 +88,7 @@ class Website {
 	navPushState( event ) {
 		event.preventDefault();
 		
-		this.forEach( document.querySelectorAll( ".logo" ), ( element ) => element.classList.add( "spin" ) );
+		this.forEach( document.getElementsByClassName( "logo" ), ( element ) => element.classList.add( "spin" ) );
 		
 		this.loading = true;
 
@@ -109,13 +110,13 @@ class Website {
 			$( "#content" ).html( html ).fadeIn( 500 );
 			
 			// reaply all the pushstate events
-			this.forEach( document.querySelector( "#content" ).querySelectorAll( ".pagenav" ), ( element ) => {
+			this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
 				element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
 			});
 
 			// if has mouse reaply title no-touch style
 			if( this.hasMouse ) {
-				this.forEach( document.querySelectorAll( ".title" ), ( element ) => element.classList.add( "no-touch" ) );
+				this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
 			}
 
 			// update google analytics stats
@@ -123,7 +124,7 @@ class Website {
 		});
 	}
 
-	// helper function for looping over nodeLists returned by querySelectorAll
+	// helper function for looping over nodeLists
 	forEach( array, callback, scope ) {
 		for( let i = 0; i < array.length; i++ ) {
 			callback.call( scope, array[i] );
