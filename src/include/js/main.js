@@ -105,11 +105,11 @@ class Website {
 	// move fade in/out to css (toggle a class in js)
 	// remove jquery fade out/in dependency
 	renderPage( html ) {
-		document.getElementById("content").classList.add("transparent");
+		document.getElementById( "content" ).classList.add( "transparent" );
 		// wait 500ms for transition to end
 		setTimeout( () => {
 			// set new content
-			document.getElementById("content").innerHTML = html;
+			document.getElementById( "content" ).innerHTML = html;
 			
 			// reaply all the pushstate events
 			this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
@@ -121,7 +121,7 @@ class Website {
 				this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
 			}
 
-			document.getElementById("content").classList.remove("transparent");
+			document.getElementById( "content" ).classList.remove( "transparent" );
 		}, 500 );
 
 		// update google analytics stats
@@ -144,6 +144,36 @@ class Website {
 			success: callback
 		});
 	}
+	
+	// requires babel polyfill
+	// use: getRequest( 'url' ).then( callback ).catch( callback );
+	/*
+	getRequest( url ) {
+		let promise = new Promise( ( resolve, reject ) => {
+
+			// Instantiates the XMLHttpRequest
+			let client = new XMLHttpRequest();
+
+			client.open( 'GET', url );
+			client.send();
+
+			client.onload = function () {
+				if ( this.status == 200 ) {
+					resolve( this.response );
+				} else {
+					reject( this.statusText );
+				}
+			};
+
+			client.onerror = function () {
+				reject( this.statusText );
+			};
+		});
+
+		// Return the promise
+		return promise;
+	}
+	*/
 }
 
 // run the whole thing
