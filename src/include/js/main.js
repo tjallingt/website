@@ -5,7 +5,7 @@ class Website {
 		this.hasMouse = false;
 
 		// insert age into intro
-		document.getElementById( "age" ).innerHTML = `${this.yearsSince( "1994-5-18" )} years old`;
+		document.getElementById( "age" ).innerHTML = `${ this.yearsSince( "1994-5-18" ) } years old`;
 
 		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
@@ -65,7 +65,7 @@ class Website {
 	toggleFAB() {
 		let fab = document.getElementById( "fab" );
 		
-		if( window.scrollY > 50 ) {
+		if( window.pageYOffset > 50 ) {
 			fab.classList.remove( "fab-hidden" );
 			fab.style.bottom =  "";
 		}
