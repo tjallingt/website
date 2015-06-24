@@ -71,8 +71,7 @@ class Website {
 		}
 		else if( !fab.classList.contains( "fab-hidden" ) ) {
 			fab.classList.add( "fab-hidden" );
-			let height = getComputedStyle( fab ).height; // string (in px)!
-			fab.style.bottom = `-${height}`; // make negative
+			fab.style.bottom = ( -1 * fab.offsetHeight ) + "px";
 		}
 	}
 
