@@ -29,7 +29,9 @@ class Website {
 		if (history.pushState) {
 
 			// create initial state for history api
-			this.getRequest( location.href, ( data ) => history.replaceState( data, "", location.href ) );
+			this.getRequest( location.href )
+				.then( ( data ) => history.replaceState( data, "", location.href ) )
+				.catch( ( error ) => console.error(  error ) );
 
 			// add eventlisteners for the history api functions
 			this.forEach( document.getElementsByClassName( "pagenav" ), ( element ) => {
@@ -93,11 +95,13 @@ class Website {
 
 		let url = event.currentTarget.href.replace( location.origin, "" );
 		
-		this.getRequest( url, ( data ) => {
-			history.pushState( data, "", url );
-			this.renderPage( data );
-			this.loading = false;
-		});
+		this.getRequest( url )
+			.then( ( data ) => {
+				history.pushState( data, "", url );
+				this.renderPage( data );
+				this.loading = false;
+			})
+			.catch( ( error ) => console.error( error ) );
 	}
 
 	// put html on page
@@ -134,19 +138,7 @@ class Website {
 		}
 	}
 
-	// shorthand for the jQuery ajax function
-	// replace with own get request
-	getRequest( url, callback ) {
-		$.ajax({
-			url: url,
-			cache: false,
-			success: callback
-		});
-	}
-	
-	// requires babel polyfill
-	// use: getRequest( 'url' ).then( callback ).catch( callback );
-	/*
+	// get request with promises, requires babel polyfill
 	getRequest( url ) {
 		let promise = new Promise( ( resolve, reject ) => {
 
@@ -154,6 +146,7 @@ class Website {
 			let client = new XMLHttpRequest();
 
 			client.open( 'GET', url );
+			client.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			client.send();
 
 			client.onload = function () {
@@ -172,7 +165,6 @@ class Website {
 		// Return the promise
 		return promise;
 	}
-	*/
 }
 
 // run the whole thing
