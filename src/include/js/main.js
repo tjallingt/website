@@ -144,8 +144,9 @@ class Website {
 
 			// Instantiates the XMLHttpRequest
 			let client = new XMLHttpRequest();
+			let antiCache = url.includes( "?" ) ? `&${Date.now()}` : `?${Date.now()}`;
 
-			client.open( 'GET', url );
+			client.open( 'GET', url + antiCache );
 			client.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 			client.send();
 
