@@ -27,7 +27,6 @@ class Website {
 
 		// check if pushstate is available
 		if (history.pushState) {
-
 			// create initial state for history api
 			this.getRequest( location.href )
 				.then( ( data ) => history.replaceState( data, "", location.href ) )
@@ -73,7 +72,7 @@ class Website {
 		}
 		else if( !fab.classList.contains( "fab-hidden" ) ) {
 			fab.classList.add( "fab-hidden" );
-			fab.style.bottom = ( -1 * fab.offsetHeight ) + "px";
+			fab.style.bottom = `${ -1 * fab.offsetHeight }px`;
 		}
 	}
 
@@ -140,20 +139,21 @@ class Website {
 
 	// get request with promises, requires babel polyfill
 	getRequest( url ) {
-		let promise = new Promise( ( resolve, reject ) => {
-
-			// Instantiates the XMLHttpRequest
+		return new Promise( ( resolve, reject ) => {
 			let client = new XMLHttpRequest();
-			let antiCache = url.includes( "?" ) ? `&${Date.now()}` : `?${Date.now()}`;
+			// prevent caching of the xmlhttprequest
+			let antiCache = url.includes( "?" ) ? `&_=${ Date.now() }` : `?_=${ Date.now() }`;
 
-			client.open( 'GET', url + antiCache );
-			client.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+			client.open( "GET", url + antiCache );
+			// header to diferentiate this request from a 'normal' request
+			client.setRequestHeader( "X-Requested-With", "XMLHttpRequest" );
 			client.send();
 
 			client.onload = function () {
-				if ( this.status == 200 ) {
+				if( this.status == 200 ) {
 					resolve( this.response );
-				} else {
+				} 
+				else {
 					reject( this.statusText );
 				}
 			};
@@ -162,9 +162,6 @@ class Website {
 				reject( this.statusText );
 			};
 		});
-
-		// Return the promise
-		return promise;
 	}
 }
 
