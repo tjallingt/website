@@ -65,7 +65,7 @@ class Website {
 	toggleFAB() {
 		let fab = document.getElementById( "fab" );
 		
-		if( window.pageYOffset > 50 ) {
+		if( window.pageYOffset > 75 ) {
 			fab.classList.remove( "fab-hidden" );
 			fab.style.bottom =  "";
 		}
