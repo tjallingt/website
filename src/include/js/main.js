@@ -5,7 +5,7 @@ class Website {
 		this.hasMouse = false;
 
 		// insert age into intro
-		document.getElementById( "age" ).innerHTML = `${this.yearsSince( "1994-5-18" )} years old`;
+		document.getElementById( "age" ).innerHTML = `${ this.yearsSince( "1994-5-18" ) } years old`;
 
 		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
@@ -27,9 +27,10 @@ class Website {
 
 		// check if pushstate is available
 		if (history.pushState) {
-
 			// create initial state for history api
-			this.getRequest( location.href, ( data ) => history.replaceState( data, "", location.href ) );
+			this.getRequest( location.href )
+				.then( ( data ) => history.replaceState( data, "", location.href ) )
+				.catch( ( error ) => console.error(  error ) );
 
 			// add eventlisteners for the history api functions
 			this.forEach( document.getElementsByClassName( "pagenav" ), ( element ) => {
@@ -65,14 +66,13 @@ class Website {
 	toggleFAB() {
 		let fab = document.getElementById( "fab" );
 		
-		if( window.scrollY > 50 ) {
+		if( window.pageYOffset > 75 ) {
 			fab.classList.remove( "fab-hidden" );
 			fab.style.bottom =  "";
 		}
 		else if( !fab.classList.contains( "fab-hidden" ) ) {
 			fab.classList.add( "fab-hidden" );
-			let height = getComputedStyle( fab ).height; // string (in px)!
-			fab.style.bottom = `-${height}`; // make negative
+			fab.style.bottom = `${ -1 * fab.offsetHeight }px`;
 		}
 	}
 
@@ -94,11 +94,13 @@ class Website {
 
 		let url = event.currentTarget.href.replace( location.origin, "" );
 		
-		this.getRequest( url, ( data ) => {
-			history.pushState( data, "", url );
-			this.renderPage( data );
-			this.loading = false;
-		});
+		this.getRequest( url )
+			.then( ( data ) => {
+				history.pushState( data, "", url );
+				this.renderPage( data );
+				this.loading = false;
+			})
+			.catch( ( error ) => console.error( error ) );
 	}
 
 	// put html on page
@@ -135,32 +137,23 @@ class Website {
 		}
 	}
 
-	// shorthand for the jQuery ajax function
-	// replace with own get request
-	getRequest( url, callback ) {
-		$.ajax({
-			url: url,
-			cache: false,
-			success: callback
-		});
-	}
-	
-	// requires babel polyfill
-	// use: getRequest( 'url' ).then( callback ).catch( callback );
-	/*
+	// get request with promises, requires babel polyfill
 	getRequest( url ) {
-		let promise = new Promise( ( resolve, reject ) => {
-
-			// Instantiates the XMLHttpRequest
+		return new Promise( ( resolve, reject ) => {
 			let client = new XMLHttpRequest();
+			// prevent caching of the xmlhttprequest
+			let antiCache = url.includes( "?" ) ? `&_=${ Date.now() }` : `?_=${ Date.now() }`;
 
-			client.open( 'GET', url );
+			client.open( "GET", url + antiCache );
+			// header to diferentiate this request from a 'normal' request
+			client.setRequestHeader( "X-Requested-With", "XMLHttpRequest" );
 			client.send();
 
 			client.onload = function () {
-				if ( this.status == 200 ) {
+				if( this.status == 200 ) {
 					resolve( this.response );
-				} else {
+				} 
+				else {
 					reject( this.statusText );
 				}
 			};
@@ -169,11 +162,7 @@ class Website {
 				reject( this.statusText );
 			};
 		});
-
-		// Return the promise
-		return promise;
 	}
-	*/
 }
 
 // run the whole thing

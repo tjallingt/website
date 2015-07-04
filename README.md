@@ -13,7 +13,6 @@ The frameworks/libraries that this project uses with can be downloaded with:
 This project is build with:
 * Slimframework (php)
 * Mustache (php)
-* jQuery (js)
 * Sass (css)
 
 Building this project is done using:
@@ -56,8 +55,8 @@ Work is still needed on:
 - [x] removing mustache.js in favour of rendering the templates server side.
 	- [x] mustache templates to the ```templates/``` folder.
 	- [x] ajax response will be html.
-- [ ] removing jQuery in favour of pure javascript.
-	- [ ] use es6 with babel.js.
+- [x] removing jQuery in favour of pure javascript.
+	- [x] use es6 with babel.js.
 - [ ] using css flexbox.
 	- [ ] remove margin: auto; method.
 	- [ ] browser compatibility?
