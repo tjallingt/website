@@ -1,2 +1,5 @@
 # ignore composer libraries
 vendor/
+
+# ignore config file
+config.php

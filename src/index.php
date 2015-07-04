@@ -1,13 +1,13 @@
 <?
 // Composer autoloader (loads slimframework and mustache)
 require 'vendor/autoload.php';
-// Config file containing email, host, database, username and password
-require 'include/php/config.php';
+// Config file containing $EMAIL, $DB_HOST, $DB_NAME, $DB_USER and $DB_PASS
+require 'config.php';
 // Database model class
 require 'include/php/dbModel.php';
 
 $app = new \Slim\Slim();
-$app->db = new dbModel( $host, $database, $username, $password );
+$app->db = new dbModel( $DB_HOST, $DB_NAME, $DB_USER, $DB_PASS );
 $app->m = new Mustache_Engine(array(
     'loader' => new Mustache_Loader_FilesystemLoader(dirname(__FILE__) . '/templates')
 ));
@@ -48,9 +48,9 @@ $app->get( '/project/:project(/)', function( $project ) use( $app ) {
 });
 
 // redirect to email (and hide email address from scrapers)
-$app->get( '/maillink', function() use( $app, $email ) {
+$app->get( '/maillink', function() use( $app, $EMAIL ) {
 
-	$url = 'mailto:' . $email . '?' . $_SERVER[ 'QUERY_STRING' ];
+	$url = 'mailto:' . $EMAIL . '?' . $_SERVER[ 'QUERY_STRING' ];
 	$app->redirect( $url );
 
 });
