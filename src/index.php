@@ -14,7 +14,6 @@ $app->m = new Mustache_Engine(array(
 
 // home page
 $app->get( '/', function() use( $app ) {
-	
 	// put it in an array so mustache is able to render it
 	$db = array( 'list' => $app->db->getList() );
 	if( empty( $db['list'] ) ) $app->error();
@@ -27,12 +26,10 @@ $app->get( '/', function() use( $app ) {
 	else {
 		$app->render( 'main.php', array( 'html' => $html ) );
 	}
-
 });
 
 // project page
 $app->get( '/project/:project(/)', function( $project ) use( $app ) {
-	
 	$db = $app->db->getItem( $project );
 	if( empty( $db ) ) $app->notFound();
 	
@@ -44,35 +41,26 @@ $app->get( '/project/:project(/)', function( $project ) use( $app ) {
 	else {
 		$app->render( 'main.php', array( 'html' => $html ) );
 	}
-
 });
 
 // redirect to email (and hide email address from scrapers)
 $app->get( '/maillink', function() use( $app, $EMAIL ) {
-
 	$url = 'mailto:' . $EMAIL . '?' . $_SERVER[ 'QUERY_STRING' ];
 	$app->redirect( $url );
-
 });
 
 // redirect all other routes to not found
 $app->get( '/:path+', function( $path ) use( $app ) {
-
 	$app->notFound();
-
 });
 
 // page not found
 $app->notFound( function() use ( $app ) {
-
 	$app->render( '404.php' );
-
 });
 
 $app->error( function() use( $app ) {
-
 	$app->render( '500.php' );
-
 });
 
 $app->run();
