@@ -1,4 +1,4 @@
-<?
+<?php
 // Composer autoloader (loads slimframework and mustache)
 require 'vendor/autoload.php';
 // Config file containing $EMAIL, $DB_HOST, $DB_NAME, $DB_USER and $DB_PASS
