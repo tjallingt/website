@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- METADATA -->
-		<title>Tjalling Tolle</title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>Tjalling Tolle</title>
 		<meta name="theme-color" content="#FFF8E7">
 		
 		<!-- Google -->

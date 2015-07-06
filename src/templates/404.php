@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- METADATA -->
-		<title>Page not found</title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<title>Page not found</title>
 		<meta name="theme-color" content="#FFF8E7">
 			
 		<!-- FAVICON -->
