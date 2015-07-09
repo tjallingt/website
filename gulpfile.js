@@ -21,7 +21,7 @@ gulp.task('copy-all', function() {
 gulp.task('minify-js', ['lint-js'], function() {
 	return gulp.src(['src/include/js/*.js'], {base: 'src'})
 		.pipe(sourcemaps.init())
-			.pipe(babel())
+			.pipe(babel({loose: "all"}))
 			.pipe(uglify())
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest('dist'));
