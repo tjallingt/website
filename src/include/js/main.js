@@ -4,8 +4,11 @@ class Website {
 		this.loading = false;
 		this.hasMouse = false;
 
-		// insert age into intro
-		document.getElementById( "age" ).innerHTML = `${ this.yearsSince( "1994-5-18" ) } years old`;
+		let age = this.yearsSince( 1994, 5, 18 );
+		if( !isNaN( age ) ) {
+			// insert age into intro
+			document.getElementById( "age" ).innerHTML = `${ age } years old`;
+		}
 
 		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
 		this.boundNoTouch = ( event ) =>  this.noTouch( event );
@@ -53,11 +56,11 @@ class Website {
 	}
 
 	// function to the number of years since a given date
-	yearsSince( date ) {
-		let then = new Date( date );
-		let today = new Date();
+	yearsSince( ...date ) {
+		let then = new Date( ...date );
+		let now = new Date();
 		// subtracting two dates gives the amount of milliseconds between them
-		let msSince = new Date( today - then );
+		let msSince = new Date( now - then );
 		// 1970 is the beginning of unix time, subtract that to get the amount of years since the given date
 		return msSince.getFullYear() - 1970;
 	}
@@ -107,27 +110,29 @@ class Website {
 	// move fade in/out to css (toggle a class in js)
 	// remove jquery fade out/in dependency
 	renderPage( html ) {
-		document.getElementById( "content" ).classList.add( "transparent" );
-		// wait 500ms for transition to end
-		setTimeout( () => {
-			// set new content
-			document.getElementById( "content" ).innerHTML = html;
-			
-			// reaply all the pushstate events
-			this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
-				element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
-			});
+		if( html ) { // check "" or null for safari
+			document.getElementById( "content" ).classList.add( "transparent" );
+			// wait 500ms for transition to end
+			setTimeout( () => {
+				// set new content
+				document.getElementById( "content" ).innerHTML = html;
+				
+				// reaply all the pushstate events
+				this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
+					element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
+				});
 
-			// if has mouse reaply title no-touch style
-			if( this.hasMouse ) {
-				this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
-			}
+				// if has mouse reaply title no-touch style
+				if( this.hasMouse ) {
+					this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
+				}
 
-			document.getElementById( "content" ).classList.remove( "transparent" );
-		}, 500 );
+				document.getElementById( "content" ).classList.remove( "transparent" );
+			}, 500 );
 
-		// update google analytics stats
-		ga( "send", "pageview", location.pathname );
+			// update google analytics stats
+			ga( "send", "pageview", location.pathname );
+		}
 	}
 
 	// helper function for looping over nodeLists
