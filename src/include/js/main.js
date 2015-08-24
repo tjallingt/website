@@ -10,18 +10,17 @@ class Website {
 			document.getElementById( "age" ).innerHTML = `${ age } years old`;
 		}
 
-		// bound event to a function to be able to call `this` inside the event but also call removeEventListener later
-		this.boundNoTouch = ( event ) =>  this.noTouch( event );
-
-		// on mousemove add no-touch class that hides the titles until hover
-		document.addEventListener( "mousemove", this.boundNoTouch );
+		// bound event to a function to be able to call `this` inside the function
+		let boundAddNoTouch = () => {
+			this.addNoTouch( () => document.removeEventListener( "mousemove", boundAddNoTouch ) );
+		};
+		document.addEventListener( "mousemove", boundAddNoTouch );
 
 		// if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
 		// (works because touchstart is triggered before mousemove)
-		let removeNoTouch = ( event ) => {
-			document.removeEventListener( "mousemove",  this.boundNoTouch );
-			// remove self; arguments.callee would be nice (wouldn't need to create a bound function) but doesnt work in es5 strict mode
-			document.removeEventListener( "touchstart", this.removeNoTouch );
+		let removeNoTouch = () => {
+			document.removeEventListener( "mousemove",  boundAddNoTouch );
+			document.removeEventListener( "touchstart", removeNoTouch );
 		};
 		document.addEventListener( "touchstart", removeNoTouch );
 
@@ -81,10 +80,10 @@ class Website {
 
 
 	// if a user uses mouse hide titles and show on hover
-	noTouch( event ) {
+	addNoTouch( callback ) {
 		this.hasMouse = true;
 		this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
-		document.removeEventListener( "mousemove", this.boundNoTouch );
+		callback();
 	}
 
 	// function for pushstate navigation
