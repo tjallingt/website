@@ -57,9 +57,12 @@ Work is still needed on:
 	- [x] ajax response will be html.
 - [x] removing jQuery in favour of pure javascript.
 	- [x] use es6 with babel.js.
-- [ ] using css flexbox.
-	- [ ] remove margin: auto; method.
-	- [ ] browser compatibility?
+- [ ] use the browserstorage to remember the last visited page
+- [ ] improve page layout
+	- [ ] css flexbox.
+		- [ ] remove margin: auto; method.
+		- [ ] browser compatibility?
+- [ ] move server side code to node.js (and use digital ocean or something like that for hosting)
 - [ ] adding pagination to the homepage.
 - [ ] ...
 
