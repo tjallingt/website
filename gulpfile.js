@@ -19,7 +19,11 @@ gulp.task('copy-all', function() {
 
 // minify javascript files
 gulp.task('compile-js', ['lint-js'], function() {
+<<<<<<< HEAD
 	return gulp.src(['src/include/js/*.js', '!src/include/js/*.min.js'], {base: 'src'})
+=======
+	return gulp.src(['src/include/js/*.js'], {base: 'src'})
+>>>>>>> origin/master
 		.pipe(sourcemaps.init())
 			.pipe(babel({loose: "all"}))
 			.pipe(uglify())
@@ -29,8 +33,13 @@ gulp.task('compile-js', ['lint-js'], function() {
 
 // add external preminified js libraries
 gulp.task('external-js', function() {
+<<<<<<< HEAD
 	return gulp.src(['src/include/js/*.min.js'], {base: 'src'})
 		.pipe(gulp.dest('dist'));
+=======
+	return gulp.src(['src/include/external-js/*.js'])
+		.pipe(gulp.dest('dist/include/js/'));
+>>>>>>> origin/master
 });
 
 gulp.task('babel-polyfill', function() {
