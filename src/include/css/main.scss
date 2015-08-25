@@ -147,7 +147,7 @@ hr {
 		top: 10px;
 		transition: opacity 500ms, top 500ms;
 		
-		&.no-touch {
+		html.no-touch & {
 			opacity: 0;
 			top: -20px;
 		}

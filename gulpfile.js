@@ -18,7 +18,7 @@ gulp.task('copy-all', function() {
 });
 
 // minify javascript files
-gulp.task('minify-js', ['lint-js'], function() {
+gulp.task('compile-js', ['lint-js'], function() {
 	return gulp.src(['src/include/js/*.js'], {base: 'src'})
 		.pipe(sourcemaps.init())
 			.pipe(babel({loose: "all"}))
@@ -27,7 +27,13 @@ gulp.task('minify-js', ['lint-js'], function() {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('polyfill-js', function() {
+// add external preminified js libraries
+gulp.task('external-js', function() {
+	return gulp.src(['src/include/external-js/*.js'])
+		.pipe(gulp.dest('dist/include/js/'));
+});
+
+gulp.task('babel-polyfill', function() {
 	return gulp.src(['node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.min.js'])
 		.pipe(gulp.dest('dist/include/js/'));
 });
@@ -48,4 +54,4 @@ gulp.task('minify-css', function() {
 });
 
 // default sets up entire project
-gulp.task('default', ['copy-all', 'minify-js', 'polyfill-js', 'minify-css']);
+gulp.task('default', ['copy-all', 'compile-js', 'external-js', 'babel-polyfill', 'minify-css']);
