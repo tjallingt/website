@@ -18,8 +18,8 @@ gulp.task('copy-all', function() {
 });
 
 // minify javascript files
-gulp.task('minify-js', ['lint-js'], function() {
-	return gulp.src(['src/include/js/*.js'], {base: 'src'})
+gulp.task('compile-js', ['lint-js'], function() {
+	return gulp.src(['src/include/js/*.js', '!src/include/js/*.min.js'], {base: 'src'})
 		.pipe(sourcemaps.init())
 			.pipe(babel({loose: "all"}))
 			.pipe(uglify())
@@ -27,14 +27,20 @@ gulp.task('minify-js', ['lint-js'], function() {
 		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('polyfill-js', function() {
+// add external preminified js libraries
+gulp.task('external-js', function() {
+	return gulp.src(['src/include/js/*.min.js'], {base: 'src'})
+		.pipe(gulp.dest('dist'));
+});
+
+gulp.task('babel-polyfill', function() {
 	return gulp.src(['node_modules/gulp-babel/node_modules/babel-core/browser-polyfill.min.js'])
 		.pipe(gulp.dest('dist/include/js/'));
 });
 
 // lint certain javascript files (non-libraries)
 gulp.task('lint-js', function() {
-	return gulp.src(['src/include/js/*.js'])
+	return gulp.src(['src/include/js/*.js', '!src/include/js/*.min.js'])
 		.pipe(jshint({curly: true, esnext: true}))
 		.pipe(jshint.reporter('default'))
 		.pipe(jshint.reporter('fail'));
@@ -48,4 +54,4 @@ gulp.task('minify-css', function() {
 });
 
 // default sets up entire project
-gulp.task('default', ['copy-all', 'minify-js', 'polyfill-js', 'minify-css']);
+gulp.task('default', ['copy-all', 'compile-js', 'external-js', 'babel-polyfill', 'minify-css']);

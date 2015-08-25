@@ -147,14 +147,16 @@ hr {
 		top: 10px;
 		transition: opacity 500ms, top 500ms;
 		
-		&.no-touch {
+		html.no-touch & {
 			opacity: 0;
 			top: -20px;
+
+			
 		}
 	}
-	
-	// weird but necessary
-	&:hover .title.no-touch {
+
+	// hover on .list and toggle .title (when html has .no-touch)
+	html.no-touch &:hover .title {
 		opacity: 1;
 		top: 10px;
 	}

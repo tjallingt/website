@@ -2,7 +2,6 @@ class Website {
 	constructor() {
 		// class wide variables
 		this.loading = false;
-		this.hasMouse = false;
 
 		let age = this.yearsSince( 1994, 5, 18 );
 		if( !isNaN( age ) ) {
@@ -10,25 +9,11 @@ class Website {
 			document.getElementById( "age" ).innerHTML = `${ age } years old`;
 		}
 
-		// bound event to a function to be able to call `this` inside the function
-		let boundAddNoTouch = () => {
-			this.addNoTouch( () => document.removeEventListener( "mousemove", boundAddNoTouch ) );
-		};
-		document.addEventListener( "mousemove", boundAddNoTouch );
-
-		// if a mobile use clicks a link mousemove is triggered, to prevent this touchstart will unbind the mousemove listener
-		// (works because touchstart is triggered before mousemove)
-		let removeNoTouch = () => {
-			document.removeEventListener( "mousemove",  boundAddNoTouch );
-			document.removeEventListener( "touchstart", removeNoTouch );
-		};
-		document.addEventListener( "touchstart", removeNoTouch );
-
 		// show/hide floating action button when scrolling
 		window.addEventListener( "scroll", this.toggleFAB );
 
 		// check if pushstate is available
-		if (history.pushState) {
+		if( Modernizr.history ) {
 			// create initial state for history api
 			this.getRequest( location.href )
 				.then( ( data ) => history.replaceState( data, "", location.href ) )
@@ -80,10 +65,7 @@ class Website {
 
 
 	// if a user uses mouse hide titles and show on hover
-	addNoTouch( callback ) {
-		this.hasMouse = true;
-		this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
-		callback();
+	addNoTouch() {
 	}
 
 	// function for pushstate navigation
@@ -120,11 +102,6 @@ class Website {
 				this.forEach( document.getElementById( "content" ).getElementsByClassName( "pagenav" ), ( element ) => {
 					element.addEventListener( "click",  ( event ) => this.navPushState( event ) );
 				});
-
-				// if has mouse reaply title no-touch style
-				if( this.hasMouse ) {
-					this.forEach( document.getElementsByClassName( "title" ), ( element ) => element.classList.add( "no-touch" ) );
-				}
 
 				document.getElementById( "content" ).classList.remove( "transparent" );
 			}, 500 );
